@@ -6,27 +6,23 @@ const objectsPerRound = 5;
 let availableObjects = [];
 
 
-const objects = [
-	{ image: "https://imgpile.com/images/DPALlX.jpg", price: 149 }, //abd
-	{ image: "https://imgpile.com/images/DogF13.jpg", price: 172 }, //finch
-	{ image: "https://imgpile.com/images/DPAoX2.jpg", price: 82 }, //kohli
-	{ image: "https://imgpile.com/images/DPAqpG.jpg", price: 400 }, //lara
-	{ image: "https://imgpile.com/images/DPAATa.jpg", price: 264 }, //rohit
-	{ image: "https://imgpile.com/images/Dogg2w.jpg", price: 144 }, //smith
-	{ image: "https://imgpile.com/images/DogQKl.jpg", price: 335 }, //warner
-	{ image: "https://imgpile.com/images/DogvaF.jpg", price: 237 }, //guptill
-	{ image: "https://imgpile.com/images/DqDbz1.jpg", price: 200 }, //sachin
-	{ image: "https://imgpile.com/images/DqDdvL.png", price: 251 }, //kane
-	{ image: "https://imgpile.com/images/DqD9wx.jpg", price: 135 },//stokes (ashes)
-	{ image: "https://i.imgur.com/DLmzwpA.png", price: 110 },//buttler
-	{ image: "https://i.imgur.com/kEpvy15.jpeg", price: 114 },//fakhar
-	{ image: "https://i.imgur.com/L3ciBKK.jpeg", price: 215 },//gayle
-	{ image: "https://i.imgur.com/KYaLPco.jpeg", price: 380 },//hayden
-	{ image: "https://i.imgur.com/f3TrgIu.gif", price: 135 },//sanga
-	{ image: "https://i.imgur.com/Fd0OSUr.jpeg", price: 69 },//kane
-	{ image: "https://i.imgur.com/fibq2WQ.jpeg", price: 34 }//brathwaite
+async function loadObjects() {
+  try {
+    const response = await fetch('data.json'); 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const objects = await response.json(); 
+    console.log(objects); 
 
-];
+  } catch (error) {
+    console.error('Error fetching objects:', error);
+  }
+}
+
+loadObjects();
+
+
 
 function shuffleArray(array) {
 	for (let i = array.length - 1; i > 0; i--) {
