@@ -388,7 +388,7 @@ function startNewRound() {
     roundScore = 0;
     objectsInRound = 0;
     availableObjects = [];
-    nextObject();
+    showStartScreen();
 }
 
 function showStartScreen() {
@@ -398,7 +398,9 @@ function showStartScreen() {
 }
 
 function startGame() {
-    startNewRound();
+    // Hide start screen and begin the actual round
+    document.getElementById("start-screen").style.display = "none";
+    nextObject();
 }
 
 // Initialize game
