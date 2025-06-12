@@ -1,17 +1,16 @@
 
 #!/bin/bash
 
-# Make the script executable and navigate to cricguess directory
-cd "$(dirname "$0")"
+echo "🏏 Add New Cricket Player"
+echo "========================"
 
-echo "🏏 CricGuess Player Manager"
-echo "=========================="
+# Get image URL
+echo -n "Enter image URL: "
+read image_url
 
-# Check if Python 3 is available
-if ! command -v python3 &> /dev/null; then
-    echo "Error: Python 3 is required but not installed."
-    exit 1
-fi
+# Get runs/price
+echo -n "Enter runs scored: "
+read runs
 
-# Run the Python script with arguments
-python3 add_player.py "$@"
+# Run the Python script with the inputs
+python3 add_player.py --image "$image_url" --runs "$runs"
