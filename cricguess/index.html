@@ -376,11 +376,11 @@
         .runs-counter {
             font-size: 5rem;
             font-weight: 900;
-            color: white;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            color: #f0f8ff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
             animation: pulse 0.1s ease-in-out;
-            background: var(--gradient);
+            background: linear-gradient(135deg, #87ceeb 0%, #98d8f4 100%);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -461,16 +461,6 @@
                     <div class="round-info" id="objects-count"></div>
                 </div>
 
-                <div class="image-container">
-                    <img id="object-image" src="" alt="Cricket player image">
-                    <div id="loading">Loading...</div>
-                    <div id="error" style="display: none;">Error loading image</div>
-                    <!-- Counter Overlay on Image -->
-                    <div id="counter-overlay" class="counter-overlay" style="display: none;">
-                        <div id="runs-counter" class="runs-counter">0</div>
-                    </div>
-                </div>
-
                 <div class="game-info">
                     <div>
                         <strong>Round Score:</strong> 
@@ -479,6 +469,16 @@
                     <div>
                         <strong>Accuracy:</strong> 
                         <span id="accuracy" class="stat-value">0%</span>
+                    </div>
+                </div>
+
+                <div class="image-container">
+                    <img id="object-image" src="" alt="Cricket player image">
+                    <div id="loading">Loading...</div>
+                    <div id="error" style="display: none;">Error loading image</div>
+                    <!-- Counter Overlay on Image -->
+                    <div id="counter-overlay" class="counter-overlay" style="display: none;">
+                        <div id="runs-counter" class="runs-counter">0</div>
                     </div>
                 </div>
 
