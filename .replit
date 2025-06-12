@@ -1,8 +1,7 @@
-entrypoint = "index.html"
-modules = ["python-3.11", "web"]
+modules = ["web", "nodejs-20", "nix"]
 
 [nix]
-channel = "stable-24_11"
+channel = "stable-24_05"
 packages = ["static-web-server"]
 
 [deployment]
