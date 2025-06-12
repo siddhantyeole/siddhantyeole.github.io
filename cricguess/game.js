@@ -145,6 +145,7 @@ function updateUI() {
 
     document.getElementById("game-container").style.display = "block";
     document.getElementById("round-end-container").style.display = "none";
+    document.getElementById("start-screen").style.display = "none";
 
     updateAccuracy();
 }
@@ -161,16 +162,16 @@ function nextObject() {
 
 function calculatePoints(guess, actualPrice) {
     const error = Math.abs(guess - actualPrice);
-    
+
     // Perfect guess gets 100 points
     if (error === 0) return 100;
-    
+
     // Exact 1 run off gets 99 points
     if (error === 1) return 99;
-    
+
     // Advanced scoring system with multiple tiers
     let points;
-    
+
     if (error <= 5) {
         // Very close guesses: 95-98 points (exponential decay)
         points = 100 - Math.pow(error - 1, 1.5) * 0.8;
@@ -196,26 +197,26 @@ function calculatePoints(guess, actualPrice) {
         // Terrible guesses: 0 points
         points = 0;
     }
-    
+
     // Apply bonus multipliers for specific scenarios
     let multiplier = 1;
-    
+
     // Bonus for very low scores (harder to guess accurately)
     if (actualPrice <= 30 && error <= 5) {
         multiplier = 1.1; // 10% bonus
     }
-    
+
     // Bonus for very high scores (also harder to guess)
     if (actualPrice >= 300 && error <= 10) {
         multiplier = 1.05; // 5% bonus
     }
-    
+
     // Apply difficulty bonus based on the actual score range
     const difficultyBonus = getDifficultyBonus(actualPrice, error);
     multiplier *= difficultyBonus;
-    
+
     points *= multiplier;
-    
+
     // Ensure points are within 0-100 range and round to nearest integer
     return Math.round(Math.max(0, Math.min(points, 100)));
 }
@@ -223,7 +224,7 @@ function calculatePoints(guess, actualPrice) {
 function getDifficultyBonus(actualPrice, error) {
     // Different score ranges have different difficulty levels
     let baseMultiplier = 1;
-    
+
     if (actualPrice <= 25) {
         // Very low scores are hardest to predict
         baseMultiplier = 1.15;
@@ -240,12 +241,12 @@ function getDifficultyBonus(actualPrice, error) {
         // Middle range scores (50-250) are easiest
         baseMultiplier = 1.0;
     }
-    
+
     // Additional precision bonus for extremely accurate guesses
     if (error <= 2) {
         baseMultiplier *= 1.02; // Extra 2% for being within 2 runs
     }
-    
+
     return baseMultiplier;
 }
 
@@ -390,12 +391,26 @@ function startNewRound() {
     nextObject();
 }
 
+function showStartScreen() {
+  document.getElementById("start-screen").style.display = "block";
+  document.getElementById("game-container").style.display = "none";
+  document.getElementById("round-end-container").style.display = "none";
+}
+
+function startGame() {
+    startNewRound();
+}
+
 // Initialize game
 window.addEventListener('load', async () => {
     await loadObjects();
     loadStats();
+    
+    // Initially show the start screen
+    showStartScreen();
+
     if (objects.length > 0) {
-        startNewRound();
+      //  startNewRound(); // changed to showStartScreen initially
     } else {
         document.getElementById("game-container").innerHTML = 
             '<div style="text-align: center; padding: 2rem;"><h2>No cricket players loaded!</h2><p>Please check data.json file.</p></div>';

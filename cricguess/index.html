@@ -56,7 +56,7 @@
         }
 
         .header h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -416,6 +416,55 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
+        .start-round-screen {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--container-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .start-round-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--heading-color);
+            background: var(--gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .start-round-description {
+            font-size: 1rem;
+            color: var(--text-color);
+            margin-top: 1rem;
+            opacity: 0.8;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .start-round-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 1.5rem 3rem;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            margin: 2rem 0 1rem 0;
+        }
+
+        .start-round-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+        }
+
         @media (max-width: 768px) {
             .main-container {
                 grid-template-columns: 1fr;
@@ -444,6 +493,15 @@
                 padding: 0.75rem 1.5rem;
                 font-size: 1rem;
             }
+
+            .start-round-title {
+                font-size: 2rem;
+            }
+
+            .start-round-btn {
+                padding: 1.2rem 2.5rem;
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -455,7 +513,13 @@
 
     <div class="main-container">
         <div class="game-section">
-            <div id="game-container">
+            <div id="start-round-container" class="start-round-screen">
+                <h2 class="start-round-title">🏏 Ready to Play?</h2>
+                <button id="start-round-btn" class="start-round-btn" onclick="startNewRound()">Start Round</button>
+                <p class="start-round-description">Guess the runs the player scored in the innings shown in the picture</p>
+            </div>
+
+            <div id="game-container" style="display: none;">
                 <div class="controls">
                     <button class="theme-toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
                     <div class="round-info" id="objects-count"></div>
