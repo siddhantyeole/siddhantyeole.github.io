@@ -6,21 +6,80 @@ const objectsPerRound = 5;
 let availableObjects = [];
 
 
-async function loadObjects() {
-  try {
-    const response = await fetch('data.json'); 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const objects = await response.json(); 
-    console.log(objects); 
-
-  } catch (error) {
-    console.error('Error fetching objects:', error);
+cost objects = [
+  {
+    "image": "https://imgpile.com/images/DPALlX.jpg",
+    "price": 149
+  },
+  {
+    "image": "https://imgpile.com/images/DogF13.jpg",
+    "price": 172
+  },
+  {
+    "image": "https://imgpile.com/images/DPAoX2.jpg",
+    "price": 82
+  },
+  {
+    "image": "https://imgpile.com/images/DPAqpG.jpg",
+    "price": 400
+  },
+  {
+    "image": "https://imgpile.com/images/DPAATa.jpg",
+    "price": 264
+  },
+  {
+    "image": "https://imgpile.com/images/Dogg2w.jpg",
+    "price": 144
+  },
+  {
+    "image": "https://imgpile.com/images/DogQKl.jpg",
+    "price": 335
+  },
+  {
+    "image": "https://imgpile.com/images/DogvaF.jpg",
+    "price": 237
+  },
+  {
+    "image": "https://imgpile.com/images/DqDbz1.jpg",
+    "price": 200
+  },
+  {
+    "image": "https://imgpile.com/images/DqDdvL.png",
+    "price": 251
+  },
+  {
+    "image": "https://imgpile.com/images/DqD9wx.jpg",
+    "price": 135
+  },
+  {
+    "image": "https://i.imgur.com/DLmzwpA.png",
+    "price": 110
+  },
+  {
+    "image": "https://i.imgur.com/kEpvy15.jpeg",
+    "price": 114
+  },
+  {
+    "image": "https://i.imgur.com/L3ciBKK.jpeg",
+    "price": 215
+  },
+  {
+    "image": "https://i.imgur.com/KYaLPco.jpeg",
+    "price": 380
+  },
+  {
+    "image": "https://i.imgur.com/f3TrgIu.gif",
+    "price": 135
+  },
+  {
+    "image": "https://i.imgur.com/Fd0OSUr.jpeg",
+    "price": 69
+  },
+  {
+    "image": "https://i.imgur.com/fibq2WQ.jpeg",
+    "price": 34
   }
-}
-
-loadObjects();
+]
 
 
 
