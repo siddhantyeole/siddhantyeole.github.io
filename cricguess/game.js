@@ -325,25 +325,34 @@ function calculatePoints(guess, actualPrice) {
     
     if (difference === 0) {
         return maxPoints; // Perfect guess
-    } else if (difference <= 3) {
-        return 90; // Excellent
-    } else if (difference <= 8) {
-        return 80; // Very good  
-    } else if (difference <= 15) {
-        return 70; // Good
-    } else if (difference <= 25) {
-        return 60; // Decent
-    } else if (difference <= 40) {
-        return 50; // Fair
-    } else if (difference <= 60) {
-        return 40; // Below average
-    } else if (difference <= 80) {
-        return 30; // Poor
-    } else if (difference <= 100) {
-        return 20; // Very poor
-    } else {
-        return Math.max(5, 15 - Math.floor(difference / 25)); // Minimum 5 points
     }
+    
+    // Create a smooth curve that gives points from 1-99 based on difference
+    // The formula creates a balanced distribution where:
+    // - Small differences get high points (95-99)
+    // - Medium differences get moderate points (30-70)
+    // - Large differences get low points (1-29)
+    
+    let points;
+    
+    if (difference <= 50) {
+        // For differences 1-50: exponential decay from 99 to 30
+        points = Math.round(99 * Math.exp(-difference * 0.05));
+    } else if (difference <= 100) {
+        // For differences 51-100: linear decrease from 29 to 10
+        points = Math.round(29 - ((difference - 50) * 0.38));
+    } else if (difference <= 150) {
+        // For differences 101-150: slower decrease from 10 to 5
+        points = Math.round(10 - ((difference - 100) * 0.1));
+    } else {
+        // For very large differences: minimum points with slight variation
+        points = Math.max(1, Math.round(5 - (difference - 150) * 0.02));
+    }
+    
+    // Ensure points are within valid range and add some randomness for variety
+    points = Math.max(1, Math.min(99, points));
+    
+    return points;
 }
 
 function submitGuess() {
