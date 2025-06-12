@@ -1,4 +1,3 @@
-
 let currentObject = null;
 let score = 0;
 let roundScore = 0;
@@ -211,11 +210,11 @@ function updateStatsDisplay() {
     document.getElementById('games-played').textContent = gameStats.gamesPlayed;
     document.getElementById('best-round').textContent = gameStats.bestRound;
     document.getElementById('perfect-guesses').textContent = gameStats.perfectGuesses;
-    
+
     const avgScore = gameStats.roundScores.length > 0 ? 
         Math.round(gameStats.roundScores.reduce((a, b) => a + b, 0) / gameStats.roundScores.length) : 0;
     document.getElementById('avg-score').textContent = avgScore;
-    
+
     updateAccuracy();
     updateAchievements();
 }
@@ -226,7 +225,7 @@ function updateAccuracy() {
         document.getElementById('accuracy').textContent = '0%';
         return;
     }
-    
+
     const accuracy = Math.round((roundScore / (objectsInRound * 100)) * 100);
     document.getElementById('accuracy').textContent = accuracy + '%';
 }
@@ -234,7 +233,7 @@ function updateAccuracy() {
 // Update achievements
 function updateAchievements() {
     const achievements = [];
-    
+
     if (gameStats.perfectGuesses >= 1) achievements.push('🎯 Perfect Shot');
     if (gameStats.perfectGuesses >= 5) achievements.push('🏹 Sharpshooter');
     if (gameStats.bestRound >= 350) achievements.push('🔥 High Scorer');
@@ -242,11 +241,11 @@ function updateAchievements() {
     if (gameStats.gamesPlayed >= 10) achievements.push('🏆 Veteran');
     if (gameStats.gamesPlayed >= 25) achievements.push('👑 Champion');
     if (gameStats.gamesPlayed >= 50) achievements.push('🌟 Legend');
-    
+
     const avgScore = gameStats.roundScores.length > 0 ? 
         gameStats.roundScores.reduce((a, b) => a + b, 0) / gameStats.roundScores.length : 0;
     if (avgScore >= 300) achievements.push('📈 Consistent');
-    
+
     const container = document.getElementById('achievements');
     container.innerHTML = achievements.length > 0 ? 
         achievements.map(a => `<span class="achievement">${a}</span>`).join('') :
@@ -275,11 +274,11 @@ function updateUI() {
     document.getElementById("next-object").style.display = "none";
     document.getElementById("result").textContent = "";
     document.getElementById("result").className = "result";
-    
+
     // Hide counter overlay and points display
     document.getElementById("counter-overlay").style.display = "none";
     document.getElementById("points-earned").style.display = "none";
-    
+
     // Update score displays
     document.getElementById("round-score").textContent = roundScore;
     document.getElementById("objects-count").textContent = `Round ${objectsInRound}/${objectsPerRound}`;
@@ -288,7 +287,7 @@ function updateUI() {
     const loadingEl = document.getElementById('loading');
     const errorEl = document.getElementById('error');
     const imageEl = document.getElementById('object-image');
-    
+
     loadingEl.style.display = 'block';
     errorEl.style.display = 'none';
     imageEl.style.display = 'none';
@@ -309,7 +308,7 @@ function updateUI() {
 
     document.getElementById("game-container").style.display = "block";
     document.getElementById("round-end-container").style.display = "none";
-    
+
     updateAccuracy();
 }
 
@@ -324,61 +323,35 @@ function nextObject() {
 }
 
 function calculatePoints(guess, actualPrice) {
-    const difference = Math.abs(guess - actualPrice);
-    const maxPoints = 100;
-    
-    if (difference === 0) {
-        return maxPoints; // Perfect guess
-    }
-    
-    // Create a smooth curve that gives points from 1-99 based on difference
-    // The formula creates a balanced distribution where:
-    // - Small differences get high points (95-99)
-    // - Medium differences get moderate points (30-70)
-    // - Large differences get low points (1-29)
-    
-    let points;
-    
-    if (difference <= 50) {
-        // For differences 1-50: exponential decay from 99 to 30
-        points = Math.round(99 * Math.exp(-difference * 0.05));
-    } else if (difference <= 100) {
-        // For differences 51-100: linear decrease from 29 to 10
-        points = Math.round(29 - ((difference - 50) * 0.38));
-    } else if (difference <= 150) {
-        // For differences 101-150: slower decrease from 10 to 5
-        points = Math.round(10 - ((difference - 100) * 0.1));
-    } else {
-        // For very large differences: minimum points with slight variation
-        points = Math.max(1, Math.round(5 - (difference - 150) * 0.02));
-    }
-    
-    // Ensure points are within valid range and add some randomness for variety
-    points = Math.max(1, Math.min(99, points));
-    
-    return points;
+    const error = Math.abs(guess - actualPrice);
+    const maxError = Math.max(actualPrice, 400 - actualPrice);
+
+    const normalizedError = error / maxError;
+    const score = 100 * (1 - normalizedError);
+
+    return Math.round(Math.max(0, Math.min(score, 100)));
 }
 
 function animateCounter(targetValue, callback) {
     const counterEl = document.getElementById("runs-counter");
     const counterOverlay = document.getElementById("counter-overlay");
-    
+
     // Show counter overlay
     counterOverlay.style.display = "flex";
-    
+
     let currentValue = 0;
     const increment = Math.max(1, Math.ceil(targetValue / 50)); // Control speed
     const duration = 2000; // 2 seconds total
     const stepTime = duration / (targetValue / increment);
-    
+
     const timer = setInterval(() => {
         currentValue += increment;
-        
+
         if (currentValue >= targetValue) {
             currentValue = targetValue;
             counterEl.textContent = currentValue;
             clearInterval(timer);
-            
+
             // Add final emphasis
             counterEl.style.transform = "scale(1.2)";
             setTimeout(() => {
@@ -405,19 +378,19 @@ function submitGuess() {
 
     const points = calculatePoints(guess, currentObject.price);
     const difference = Math.abs(guess - currentObject.price);
-    
+
     // Hide input controls immediately
     guessInput.style.display = "none";
     document.getElementById("submit-guess").style.display = "none";
-    
+
     // Clear previous result
     resultEl.textContent = "";
     resultEl.className = "result";
-    
+
     // Start the counter animation
     animateCounter(currentObject.price, () => {
         // This callback runs after counter animation completes
-        
+
         // Add to scores
         score += points;
         roundScore += points;
@@ -431,7 +404,7 @@ function submitGuess() {
         const pointsEl = document.getElementById("points-earned");
         pointsEl.textContent = points;
         pointsEl.style.display = "block";
-        
+
         // Animate points
         pointsEl.style.transform = "scale(0)";
         setTimeout(() => {
@@ -440,7 +413,7 @@ function submitGuess() {
 
         // Build result text
         let resultText = `Your guess: ${guess} runs. `;
-        
+
         if (difference === 0) {
             resultText += `🎯 Perfect! You earned ${points} points!`;
         } else if (difference <= 8) {
@@ -457,7 +430,7 @@ function submitGuess() {
         setTimeout(() => {
             resultEl.textContent = resultText;
             resultEl.className = points >= 80 ? "result success" : "result";
-            
+
             // Update displays
             document.getElementById("round-score").textContent = roundScore;
             updateStatsDisplay();
@@ -474,12 +447,12 @@ function endRound() {
     gameStats.gamesPlayed++;
     gameStats.bestRound = Math.max(gameStats.bestRound, roundScore);
     gameStats.roundScores.push(roundScore);
-    
+
     // Keep only last 10 rounds for average calculation
     if (gameStats.roundScores.length > 10) {
         gameStats.roundScores.shift();
     }
-    
+
     saveStats();
     updateStatsDisplay();
 
