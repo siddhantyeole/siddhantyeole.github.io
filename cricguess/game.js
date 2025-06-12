@@ -88,7 +88,112 @@ const objects = [
     {
         "image": "https://i.imgur.com/fibq2WQ.jpeg",
         "price": 34
-    }
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_1280,q_80/lsci/db/PICTURES/CMS/95700/95749.jpg",
+      "price": 281
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/163400/163497.jpg",
+      "price": 152
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/146100/146134.jpg",
+      "price": 52
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/022001/022418.jpg",
+      "price": 38
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/022001/022035.jpg",
+      "price": 46
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/102000/017094.jpg",
+      "price": 84
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/102000/017116.jpg",
+      "price": 117
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/36900/36983.jpg",
+      "price": 102
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_960,q_50/lsci/db/PICTURES/DB/102000/017213.jpg",
+      "price": 34
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/012001/021192.jpg",
+      "price": 78
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/102000/017305.jpg",
+      "price": 105
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289800/289879.jpg",
+      "price": 50
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289800/289868.jpg",
+      "price": 89
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289900/289900.jpg",
+      "price": 22
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289900/289981.jpg",
+      "price": 73
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289900/289972.jpg",
+      "price": 52
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290000/290044.jpg",
+      "price": 18
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290000/290087.jpg",
+      "price": 45
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/291700/291740.jpg",
+      "price": 42
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290100/290153.jpg",
+      "price": 107
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290100/290126.jpg",
+      "price": 84
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290206.jpg",
+      "price": 30
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290270.jpg",
+      "price": 122
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290256.jpg",
+      "price": 31
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290295.jpg",
+      "price": 82
+    },
+    {
+      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290273.jpg",
+      "price": 64
+    },
+
 ];
 
 // Load saved stats
