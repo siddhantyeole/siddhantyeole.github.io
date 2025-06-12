@@ -1,10 +1,13 @@
 import pandas as pd
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from bs4 import BeautifulSoup
 import time
 import json
 import re
 from datetime import datetime
+import random
 
 
 class CricketPlayerScraper:
@@ -13,6 +16,17 @@ class CricketPlayerScraper:
         self.players_df = pd.read_csv(csv_file)
         self.scraped_data = []
         self.base_url = "https://www.espncricinfo.com/cricketers"
+        
+        # Create session with retry strategy
+        self.session = requests.Session()
+        retry_strategy = Retry(
+            total=3,
+            backoff_factor=2,
+            status_forcelist=[429, 500, 502, 503, 504]
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
 
     def scrape_player_data(self, name, key_cricinfo, max_retries=3):
         """Scrape individual player data from ESPNCricinfo"""
@@ -21,10 +35,27 @@ class CricketPlayerScraper:
         for attempt in range(max_retries):
             try:
                 headers = {
-                    'User-Agent':
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.5',
+                    'Accept-Encoding': 'gzip, deflate',
+                    'Connection': 'keep-alive',
+                    'Upgrade-Insecure-Requests': '1',
+                    'Sec-Fetch-Dest': 'document',
+                    'Sec-Fetch-Mode': 'navigate',
+                    'Sec-Fetch-Site': 'none',
+                    'Cache-Control': 'max-age=0'
                 }
-                response = requests.get(url, headers=headers, timeout=10)
+                
+                # Add random delay to avoid rate limiting
+                time.sleep(random.uniform(1, 3))
+                
+                response = self.session.get(url, headers=headers, timeout=15)
+                
+                if response.status_code == 403:
+                    print(f"403 Forbidden - may need different approach for {name}")
+                    return None
+                    
                 response.raise_for_status()
 
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -50,7 +81,9 @@ class CricketPlayerScraper:
             except Exception as e:
                 print(f"Attempt {attempt + 1} failed for {name}: {str(e)}")
                 if attempt < max_retries - 1:
-                    time.sleep(2)
+                    delay = random.uniform(3, 7)  # Random delay between attempts
+                    print(f"Waiting {delay:.1f}s before retry...")
+                    time.sleep(delay)
                 else:
                     return None
 
@@ -210,7 +243,7 @@ class CricketPlayerScraper:
         except:
             return 0.0
 
-    def scrape_all_players(self, limit=None, delay=1):
+    def scrape_all_players(self, limit=None, delay=5):
         """Scrape data for all players in the CSV"""
         total_players = len(self.players_df) if limit is None else min(
             limit, len(self.players_df))

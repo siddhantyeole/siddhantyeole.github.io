@@ -34,8 +34,8 @@ def main():
 
         # Set delay between requests
         delay = float(
-            input("Delay between requests in seconds (recommended: 2): ")
-            or "2")
+            input("Delay between requests in seconds (recommended: 5-10): ")
+            or "5")
 
         print(f"\nStarting scraping process...")
         print(f"Players to scrape: {limit or total_players}")
