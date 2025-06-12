@@ -4,6 +4,7 @@ let roundScore = 0;
 let objectsInRound = 0;
 const objectsPerRound = 5;
 let availableObjects = [];
+let objects = []; // Will be loaded from data.json
 let gameStats = {
     gamesPlayed: 0,
     bestRound: 0,
@@ -11,185 +12,21 @@ let gameStats = {
     roundScores: []
 };
 
-const objects = [
-    {
-        "image": "https://imgpile.com/images/DPALlX.jpg",
-        "price": 149
-    },
-    {
-        "image": "https://imgpile.com/images/DogF13.jpg",
-        "price": 172
-    },
-    {
-        "image": "https://imgpile.com/images/DPAoX2.jpg",
-        "price": 82
-    },
-    {
-        "image": "https://imgpile.com/images/DPAqpG.jpg",
-        "price": 400
-    },
-    {
-        "image": "https://imgpile.com/images/DPAATa.jpg",
-        "price": 264
-    },
-    {
-        "image": "https://imgpile.com/images/Dogg2w.jpg",
-        "price": 144
-    },
-    {
-        "image": "https://imgpile.com/images/DogQKl.jpg",
-        "price": 335
-    },
-    {
-        "image": "https://imgpile.com/images/DogvaF.jpg",
-        "price": 237
-    },
-    {
-        "image": "https://imgpile.com/images/DqDbz1.jpg",
-        "price": 200
-    },
-    {
-        "image": "https://imgpile.com/images/DqDdvL.png",
-        "price": 251
-    },
-    {
-        "image": "https://imgpile.com/images/DqD9wx.jpg",
-        "price": 135
-    },
-    {
-        "image": "https://i.imgur.com/DLmzwpA.png",
-        "price": 110
-    },
-    {
-        "image": "https://i.imgur.com/kEpvy15.jpeg",
-        "price": 114
-    },
-    {
-        "image": "https://i.imgur.com/L3ciBKK.jpeg",
-        "price": 215
-    },
-    {
-        "image": "https://i.imgur.com/KYaLPco.jpeg",
-        "price": 380
-    },
-    {
-        "image": "https://i.imgur.com/f3TrgIu.gif",
-        "price": 135
-    },
-    {
-        "image": "https://i.imgur.com/Fd0OSUr.jpeg",
-        "price": 69
-    },
-    {
-        "image": "https://i.imgur.com/fibq2WQ.jpeg",
-        "price": 34
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_1280,q_80/lsci/db/PICTURES/CMS/95700/95749.jpg",
-      "price": 281
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/163400/163497.jpg",
-      "price": 152
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/146100/146134.jpg",
-      "price": 52
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/022001/022418.jpg",
-      "price": 38
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/022001/022035.jpg",
-      "price": 46
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/102000/017094.jpg",
-      "price": 84
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/102000/017116.jpg",
-      "price": 117
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/36900/36983.jpg",
-      "price": 102
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_960,q_50/lsci/db/PICTURES/DB/102000/017213.jpg",
-      "price": 34
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/012001/021192.jpg",
-      "price": 78
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/DB/102000/017305.jpg",
-      "price": 105
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289800/289879.jpg",
-      "price": 50
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289800/289868.jpg",
-      "price": 89
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289900/289900.jpg",
-      "price": 22
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289900/289981.jpg",
-      "price": 73
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/289900/289972.jpg",
-      "price": 52
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290000/290044.jpg",
-      "price": 18
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290000/290087.jpg",
-      "price": 45
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/291700/291740.jpg",
-      "price": 42
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290100/290153.jpg",
-      "price": 107
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290100/290126.jpg",
-      "price": 84
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290206.jpg",
-      "price": 30
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290270.jpg",
-      "price": 122
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290256.jpg",
-      "price": 31
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290295.jpg",
-      "price": 82
-    },
-    {
-      "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_480/lsci/db/PICTURES/CMS/290200/290273.jpg",
-      "price": 64
-    },
-
-];
+// Load objects from data.json
+async function loadObjects() {
+    try {
+        const response = await fetch('./data.json');
+        if (!response.ok) {
+            throw new Error('Failed to load data.json');
+        }
+        objects = await response.json();
+        console.log(`Loaded ${objects.length} cricket players`);
+    } catch (error) {
+        console.error('Error loading objects:', error);
+        // Fallback to empty array if loading fails
+        objects = [];
+    }
+}
 
 // Load saved stats
 function loadStats() {
@@ -554,7 +391,13 @@ function startNewRound() {
 }
 
 // Initialize game
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
+    await loadObjects();
     loadStats();
-    startNewRound();
+    if (objects.length > 0) {
+        startNewRound();
+    } else {
+        document.getElementById("game-container").innerHTML = 
+            '<div style="text-align: center; padding: 2rem;"><h2>No cricket players loaded!</h2><p>Please check data.json file.</p></div>';
+    }
 });
