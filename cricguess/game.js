@@ -6,13 +6,9 @@ let objectsInRound = 0;
 const objectsPerRound = 5;
 let availableObjects = [];
 let gameStats = {
-    totalScore: 0,
     gamesPlayed: 0,
     bestRound: 0,
     perfectGuesses: 0,
-    currentStreak: 0,
-    bestStreak: 0,
-    lastScore: 0,
     roundScores: []
 };
 
@@ -212,16 +208,12 @@ function saveStats() {
 
 // Update stats display
 function updateStatsDisplay() {
-    document.getElementById('total-score').textContent = gameStats.totalScore;
     document.getElementById('games-played').textContent = gameStats.gamesPlayed;
     document.getElementById('best-round').textContent = gameStats.bestRound;
     document.getElementById('perfect-guesses').textContent = gameStats.perfectGuesses;
-    document.getElementById('current-streak').textContent = gameStats.currentStreak;
-    document.getElementById('best-streak').textContent = gameStats.bestStreak;
-    document.getElementById('last-score').textContent = gameStats.lastScore;
     
-    const avgScore = gameStats.gamesPlayed > 0 ? 
-        Math.round(gameStats.totalScore / gameStats.gamesPlayed) : 0;
+    const avgScore = gameStats.roundScores.length > 0 ? 
+        Math.round(gameStats.roundScores.reduce((a, b) => a + b, 0) / gameStats.roundScores.length) : 0;
     document.getElementById('avg-score').textContent = avgScore;
     
     updateAccuracy();
@@ -245,12 +237,15 @@ function updateAchievements() {
     
     if (gameStats.perfectGuesses >= 1) achievements.push('🎯 Perfect Shot');
     if (gameStats.perfectGuesses >= 5) achievements.push('🏹 Sharpshooter');
-    if (gameStats.bestRound >= 400) achievements.push('🔥 Hot Streak');
-    if (gameStats.bestRound >= 500) achievements.push('💎 Diamond Player');
+    if (gameStats.bestRound >= 350) achievements.push('🔥 High Scorer');
+    if (gameStats.bestRound >= 450) achievements.push('💎 Elite Player');
     if (gameStats.gamesPlayed >= 10) achievements.push('🏆 Veteran');
-    if (gameStats.gamesPlayed >= 50) achievements.push('👑 Champion');
-    if (gameStats.currentStreak >= 5) achievements.push('⚡ Lightning');
-    if (gameStats.bestStreak >= 10) achievements.push('🌟 Superstar');
+    if (gameStats.gamesPlayed >= 25) achievements.push('👑 Champion');
+    if (gameStats.gamesPlayed >= 50) achievements.push('🌟 Legend');
+    
+    const avgScore = gameStats.roundScores.length > 0 ? 
+        gameStats.roundScores.reduce((a, b) => a + b, 0) / gameStats.roundScores.length : 0;
+    if (avgScore >= 300) achievements.push('📈 Consistent');
     
     const container = document.getElementById('achievements');
     container.innerHTML = achievements.length > 0 ? 
@@ -330,18 +325,24 @@ function calculatePoints(guess, actualPrice) {
     
     if (difference === 0) {
         return maxPoints; // Perfect guess
-    } else if (difference <= 5) {
-        return 95; // Very close
-    } else if (difference <= 10) {
-        return 90; // Close
-    } else if (difference <= 20) {
-        return 80; // Good
-    } else if (difference <= 50) {
-        return 60; // Okay
+    } else if (difference <= 3) {
+        return 90; // Excellent
+    } else if (difference <= 8) {
+        return 80; // Very good  
+    } else if (difference <= 15) {
+        return 70; // Good
+    } else if (difference <= 25) {
+        return 60; // Decent
+    } else if (difference <= 40) {
+        return 50; // Fair
+    } else if (difference <= 60) {
+        return 40; // Below average
+    } else if (difference <= 80) {
+        return 30; // Poor
     } else if (difference <= 100) {
-        return 30; // Not great
+        return 20; // Very poor
     } else {
-        return Math.max(0, 20 - Math.floor(difference / 20)); // Poor
+        return Math.max(5, 15 - Math.floor(difference / 25)); // Minimum 5 points
     }
 }
 
@@ -361,15 +362,6 @@ function submitGuess() {
     
     score += points;
     roundScore += points;
-    gameStats.lastScore = points;
-
-    // Update streak
-    if (points >= 80) {
-        gameStats.currentStreak++;
-        gameStats.bestStreak = Math.max(gameStats.bestStreak, gameStats.currentStreak);
-    } else {
-        gameStats.currentStreak = 0;
-    }
 
     // Check for perfect guess
     if (points === 100) {
@@ -379,11 +371,13 @@ function submitGuess() {
     let resultText = `The actual runs scored were ${currentObject.price}. `;
     
     if (difference === 0) {
-        resultText += `🎯 PERFECT! You earned ${points} points!`;
-    } else if (difference <= 5) {
-        resultText += `🔥 Excellent! Only ${difference} runs off! You earned ${points} points!`;
-    } else if (difference <= 20) {
-        resultText += `👍 Good guess! You earned ${points} points!`;
+        resultText += `🎯 Perfect! You earned ${points} points!`;
+    } else if (difference <= 8) {
+        resultText += `Very close! Only ${difference} runs off. You earned ${points} points!`;
+    } else if (difference <= 25) {
+        resultText += `Good estimate! You earned ${points} points!`;
+    } else if (difference <= 50) {
+        resultText += `Not bad! You earned ${points} points!`;
     } else {
         resultText += `You earned ${points} points!`;
     }
@@ -404,7 +398,6 @@ function submitGuess() {
 function endRound() {
     // Update game stats
     gameStats.gamesPlayed++;
-    gameStats.totalScore += roundScore;
     gameStats.bestRound = Math.max(gameStats.bestRound, roundScore);
     gameStats.roundScores.push(roundScore);
     
@@ -419,7 +412,6 @@ function endRound() {
     document.getElementById("game-container").style.display = "none";
     document.getElementById("round-end-container").style.display = "block";
     document.getElementById("final-round-score").textContent = roundScore;
-    document.getElementById("final-total-score").textContent = score;
 }
 
 function startNewRound() {
