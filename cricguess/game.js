@@ -276,6 +276,10 @@ function updateUI() {
     document.getElementById("result").textContent = "";
     document.getElementById("result").className = "result";
     
+    // Hide counter and points display
+    document.getElementById("counter-container").style.display = "none";
+    document.getElementById("points-earned").style.display = "none";
+    
     // Update score displays
     document.getElementById("round-score").textContent = roundScore;
     document.getElementById("objects-count").textContent = `Round ${objectsInRound}/${objectsPerRound}`;
@@ -355,6 +359,39 @@ function calculatePoints(guess, actualPrice) {
     return points;
 }
 
+function animateCounter(targetValue, callback) {
+    const counterEl = document.getElementById("runs-counter");
+    const counterContainer = document.getElementById("counter-container");
+    
+    // Show counter container
+    counterContainer.style.display = "block";
+    
+    let currentValue = 0;
+    const increment = Math.max(1, Math.ceil(targetValue / 50)); // Control speed
+    const duration = 2000; // 2 seconds total
+    const stepTime = duration / (targetValue / increment);
+    
+    const timer = setInterval(() => {
+        currentValue += increment;
+        
+        if (currentValue >= targetValue) {
+            currentValue = targetValue;
+            counterEl.textContent = currentValue;
+            clearInterval(timer);
+            
+            // Add final emphasis
+            counterEl.style.transform = "scale(1.2)";
+            setTimeout(() => {
+                counterEl.style.transform = "scale(1)";
+                // Call the callback after animation completes
+                if (callback) callback();
+            }, 300);
+        } else {
+            counterEl.textContent = currentValue;
+        }
+    }, Math.max(20, stepTime)); // Minimum 20ms for smooth animation
+}
+
 function submitGuess() {
     const guessInput = document.getElementById("guess");
     const guess = parseFloat(guessInput.value);
@@ -369,39 +406,67 @@ function submitGuess() {
     const points = calculatePoints(guess, currentObject.price);
     const difference = Math.abs(guess - currentObject.price);
     
-    score += points;
-    roundScore += points;
-
-    // Check for perfect guess
-    if (points === 100) {
-        gameStats.perfectGuesses++;
-    }
-
-    let resultText = `The actual runs scored were ${currentObject.price}. `;
-    
-    if (difference === 0) {
-        resultText += `🎯 Perfect! You earned ${points} points!`;
-    } else if (difference <= 8) {
-        resultText += `Very close! Only ${difference} runs off. You earned ${points} points!`;
-    } else if (difference <= 25) {
-        resultText += `Good estimate! You earned ${points} points!`;
-    } else if (difference <= 50) {
-        resultText += `Not bad! You earned ${points} points!`;
-    } else {
-        resultText += `You earned ${points} points!`;
-    }
-
-    resultEl.textContent = resultText;
-    resultEl.className = points >= 80 ? "result success" : "result";
-    
-    // Update displays
-    document.getElementById("round-score").textContent = roundScore;
-    updateStatsDisplay();
-    saveStats();
-
+    // Hide input controls immediately
     guessInput.style.display = "none";
     document.getElementById("submit-guess").style.display = "none";
-    document.getElementById("next-object").style.display = "inline-block";
+    
+    // Clear previous result
+    resultEl.textContent = "";
+    resultEl.className = "result";
+    
+    // Start the counter animation
+    animateCounter(currentObject.price, () => {
+        // This callback runs after counter animation completes
+        
+        // Add to scores
+        score += points;
+        roundScore += points;
+
+        // Check for perfect guess
+        if (points === 100) {
+            gameStats.perfectGuesses++;
+        }
+
+        // Show points with animation
+        const pointsEl = document.getElementById("points-earned");
+        pointsEl.textContent = points;
+        pointsEl.style.display = "block";
+        
+        // Animate points
+        pointsEl.style.transform = "scale(0)";
+        setTimeout(() => {
+            pointsEl.style.transform = "scale(1)";
+        }, 100);
+
+        // Build result text
+        let resultText = `Your guess: ${guess} runs. `;
+        
+        if (difference === 0) {
+            resultText += `🎯 Perfect! You earned ${points} points!`;
+        } else if (difference <= 8) {
+            resultText += `Very close! Only ${difference} runs off. You earned ${points} points!`;
+        } else if (difference <= 25) {
+            resultText += `Good estimate! You earned ${points} points!`;
+        } else if (difference <= 50) {
+            resultText += `Not bad! You earned ${points} points!`;
+        } else {
+            resultText += `You earned ${points} points!`;
+        }
+
+        // Show result after a delay
+        setTimeout(() => {
+            resultEl.textContent = resultText;
+            resultEl.className = points >= 80 ? "result success" : "result";
+            
+            // Update displays
+            document.getElementById("round-score").textContent = roundScore;
+            updateStatsDisplay();
+            saveStats();
+
+            // Show next button
+            document.getElementById("next-object").style.display = "inline-block";
+        }, 800);
+    });
 }
 
 function endRound() {

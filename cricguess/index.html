@@ -359,6 +359,66 @@
             color: var(--danger-color);
         }
 
+        .counter-container {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 15px;
+            border: 2px solid var(--primary-color);
+            box-shadow: var(--shadow);
+        }
+
+        .counter-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .runs-counter {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            background: var(--gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 0.1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .points-earned {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .points-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-right: 0.5rem;
+        }
+
+        .points-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
         @media (max-width: 768px) {
             .main-container {
                 grid-template-columns: 1fr;
@@ -425,6 +485,16 @@
                     <input type="number" id="guess" class="guess-input" placeholder="Enter runs" min="0" max="400">
                     <button id="submit-guess" class="btn btn-primary" onclick="submitGuess()">Submit Guess</button>
                     <button id="next-object" class="btn btn-secondary" onclick="nextObject()" style="display: none;">Next Player</button>
+                </div>
+
+                <!-- Counter Animation Container -->
+                <div id="counter-container" class="counter-container" style="display: none;">
+                    <div class="counter-label">Actual Runs Scored:</div>
+                    <div id="runs-counter" class="runs-counter">0</div>
+                    <div id="points-earned" class="points-earned" style="display: none;">
+                        <span class="points-label">Points Earned:</span>
+                        <span class="points-value">0</span>
+                    </div>
                 </div>
 
                 <div id="result" class="result"></div>
