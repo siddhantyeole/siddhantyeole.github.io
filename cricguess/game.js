@@ -444,6 +444,9 @@ function submitGuess() {
 }
 
 function endRound() {
+    // Calculate final round accuracy
+    const roundAccuracy = Math.round((roundScore / (objectsPerRound * 100)) * 100);
+
     // Update game stats
     gameStats.gamesPlayed++;
     gameStats.bestRound = Math.max(gameStats.bestRound, roundScore);
@@ -460,6 +463,7 @@ function endRound() {
     document.getElementById("game-container").style.display = "none";
     document.getElementById("round-end-container").style.display = "block";
     document.getElementById("final-round-score").textContent = roundScore;
+    document.getElementById("final-round-accuracy").textContent = roundAccuracy + '%';
 }
 
 function startNewRound() {
