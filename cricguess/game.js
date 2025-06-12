@@ -276,8 +276,8 @@ function updateUI() {
     document.getElementById("result").textContent = "";
     document.getElementById("result").className = "result";
     
-    // Hide counter and points display
-    document.getElementById("counter-container").style.display = "none";
+    // Hide counter overlay and points display
+    document.getElementById("counter-overlay").style.display = "none";
     document.getElementById("points-earned").style.display = "none";
     
     // Update score displays
@@ -361,10 +361,10 @@ function calculatePoints(guess, actualPrice) {
 
 function animateCounter(targetValue, callback) {
     const counterEl = document.getElementById("runs-counter");
-    const counterContainer = document.getElementById("counter-container");
+    const counterOverlay = document.getElementById("counter-overlay");
     
-    // Show counter container
-    counterContainer.style.display = "block";
+    // Show counter overlay
+    counterOverlay.style.display = "flex";
     
     let currentValue = 0;
     const increment = Math.max(1, Math.ceil(targetValue / 50)); // Control speed

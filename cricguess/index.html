@@ -359,35 +359,31 @@
             color: var(--danger-color);
         }
 
-        .counter-container {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 2rem;
-            background: var(--card-bg);
+        .counter-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
             border-radius: 15px;
-            border: 2px solid var(--primary-color);
-            box-shadow: var(--shadow);
-        }
-
-        .counter-label {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 1rem;
+            z-index: 10;
         }
 
         .runs-counter {
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 900;
-            color: var(--primary-color);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            margin: 1rem 0;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
             transition: all 0.3s ease;
+            animation: pulse 0.1s ease-in-out;
             background: var(--gradient);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: pulse 0.1s ease-in-out;
         }
 
         @keyframes pulse {
@@ -487,14 +483,15 @@
                     <button id="next-object" class="btn btn-secondary" onclick="nextObject()" style="display: none;">Next Player</button>
                 </div>
 
-                <!-- Counter Animation Container -->
-                <div id="counter-container" class="counter-container" style="display: none;">
-                    <div class="counter-label">Actual Runs Scored:</div>
+                <!-- Counter Overlay on Image -->
+                <div id="counter-overlay" class="counter-overlay" style="display: none;">
                     <div id="runs-counter" class="runs-counter">0</div>
-                    <div id="points-earned" class="points-earned" style="display: none;">
-                        <span class="points-label">Points Earned:</span>
-                        <span class="points-value">0</span>
-                    </div>
+                </div>
+
+                <!-- Points Display -->
+                <div id="points-earned" class="points-earned" style="display: none;">
+                    <span class="points-label">Points Earned:</span>
+                    <span class="points-value">0</span>
                 </div>
 
                 <div id="result" class="result"></div>
