@@ -393,12 +393,13 @@
         }
 
         .points-earned {
-            margin-top: 1.5rem;
+            margin: 1.5rem 0;
             padding: 1rem;
             background: rgba(59, 130, 246, 0.1);
             border-radius: 10px;
             border: 1px solid var(--primary-color);
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         .points-label {
@@ -484,13 +485,16 @@
                 <div class="input-section">
                     <input type="number" id="guess" class="guess-input" placeholder="Enter runs" min="0" max="400">
                     <button id="submit-guess" class="btn btn-primary" onclick="submitGuess()">Submit Guess</button>
-                    <button id="next-object" class="btn btn-secondary" onclick="nextObject()" style="display: none;">Next Player</button>
                 </div>
 
                 <!-- Points Display -->
                 <div id="points-earned" class="points-earned" style="display: none;">
                     <span class="points-label">Points Earned:</span>
                     <span class="points-value">0</span>
+                </div>
+
+                <div class="input-section">
+                    <button id="next-object" class="btn btn-secondary" onclick="nextObject()" style="display: none;">Next Player</button>
                 </div>
 
                 <div id="result" class="result"></div>
