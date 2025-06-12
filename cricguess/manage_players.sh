@@ -4,6 +4,9 @@
 echo "🏏 Add New Cricket Player"
 echo "========================"
 
+# Change to the script directory
+cd "$(dirname "$0")"
+
 # Get image URL
 echo -n "Enter image URL: "
 read image_url
