@@ -402,7 +402,8 @@ function submitGuess() {
 
         // Show points with animation
         const pointsEl = document.getElementById("points-earned");
-        pointsEl.textContent = points;
+        const pointsValueEl = pointsEl.querySelector('.points-value');
+        pointsValueEl.textContent = points;
         pointsEl.style.display = "block";
 
         // Animate points

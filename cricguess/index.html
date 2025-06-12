@@ -464,6 +464,10 @@
                     <img id="object-image" src="" alt="Cricket player image">
                     <div id="loading">Loading...</div>
                     <div id="error" style="display: none;">Error loading image</div>
+                    <!-- Counter Overlay on Image -->
+                    <div id="counter-overlay" class="counter-overlay" style="display: none;">
+                        <div id="runs-counter" class="runs-counter">0</div>
+                    </div>
                 </div>
 
                 <div class="game-info">
@@ -481,11 +485,6 @@
                     <input type="number" id="guess" class="guess-input" placeholder="Enter runs" min="0" max="400">
                     <button id="submit-guess" class="btn btn-primary" onclick="submitGuess()">Submit Guess</button>
                     <button id="next-object" class="btn btn-secondary" onclick="nextObject()" style="display: none;">Next Player</button>
-                </div>
-
-                <!-- Counter Overlay on Image -->
-                <div id="counter-overlay" class="counter-overlay" style="display: none;">
-                    <div id="runs-counter" class="runs-counter">0</div>
                 </div>
 
                 <!-- Points Display -->
