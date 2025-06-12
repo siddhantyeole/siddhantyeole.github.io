@@ -34,12 +34,14 @@ def main():
 
         # Set delay between requests
         delay = float(
-            input("Delay between requests in seconds (recommended: 5-10): ")
-            or "5")
+            input("Delay between requests in seconds (recommended: 15-30): ")
+            or "15")
 
         print(f"\nStarting scraping process...")
         print(f"Players to scrape: {limit or total_players}")
         print(f"Delay between requests: {delay}s")
+        print("⚠️  Note: ESPNCricinfo may block requests. If you get 403 errors,")
+        print("   try increasing delays or using fewer requests.")
         print("Press Ctrl+C to stop at any time\n")
 
         # Start scraping

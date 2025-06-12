@@ -8,6 +8,7 @@ import json
 import re
 from datetime import datetime
 import random
+from urllib.parse import urljoin, urlparse
 
 
 class CricketPlayerScraper:
@@ -17,45 +18,90 @@ class CricketPlayerScraper:
         self.scraped_data = []
         self.base_url = "https://www.espncricinfo.com/cricketers"
         
-        # Create session with retry strategy
+        # List of realistic user agents to rotate
+        self.user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        ]
+        
+        # Create session with enhanced configuration
         self.session = requests.Session()
+        
+        # Set default headers to mimic a real browser
+        self.session.headers.update({
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Cache-Control': 'max-age=0',
+            'DNT': '1'
+        })
+        
         retry_strategy = Retry(
-            total=3,
-            backoff_factor=2,
-            status_forcelist=[429, 500, 502, 503, 504]
+            total=5,
+            backoff_factor=3,
+            status_forcelist=[403, 429, 500, 502, 503, 504]
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
 
-    def scrape_player_data(self, name, key_cricinfo, max_retries=3):
+    def scrape_player_data(self, name, key_cricinfo, max_retries=5):
         """Scrape individual player data from ESPNCricinfo"""
         url = f"{self.base_url}/{name}-{key_cricinfo}"
 
         for attempt in range(max_retries):
             try:
+                # Rotate user agent for each attempt
+                user_agent = random.choice(self.user_agents)
+                
+                # Create headers with rotated user agent
                 headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                    'Accept-Language': 'en-US,en;q=0.5',
-                    'Accept-Encoding': 'gzip, deflate',
+                    'User-Agent': user_agent,
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.9,en-GB;q=0.8',
+                    'Accept-Encoding': 'gzip, deflate, br',
                     'Connection': 'keep-alive',
                     'Upgrade-Insecure-Requests': '1',
                     'Sec-Fetch-Dest': 'document',
                     'Sec-Fetch-Mode': 'navigate',
-                    'Sec-Fetch-Site': 'none',
-                    'Cache-Control': 'max-age=0'
+                    'Sec-Fetch-Site': 'cross-site',
+                    'Sec-Fetch-User': '?1',
+                    'Cache-Control': 'max-age=0',
+                    'DNT': '1',
+                    'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+                    'Sec-Ch-Ua-Mobile': '?0',
+                    'Sec-Ch-Ua-Platform': '"Windows"'
                 }
                 
-                # Add random delay to avoid rate limiting
-                time.sleep(random.uniform(1, 3))
+                # Add random delay with exponential backoff
+                base_delay = 2 ** attempt
+                delay = random.uniform(base_delay, base_delay * 2)
+                time.sleep(delay)
                 
-                response = self.session.get(url, headers=headers, timeout=15)
+                # Make request with longer timeout
+                response = self.session.get(url, headers=headers, timeout=30)
                 
                 if response.status_code == 403:
-                    print(f"403 Forbidden - may need different approach for {name}")
-                    return None
-                    
+                    print(f"403 Forbidden - attempt {attempt + 1}/{max_retries} for {name}")
+                    if attempt < max_retries - 1:
+                        # Longer delay before retry for 403
+                        wait_time = random.uniform(10, 20)
+                        print(f"Waiting {wait_time:.1f}s before retry...")
+                        time.sleep(wait_time)
+                        continue
+                    else:
+                        print(f"All attempts failed for {name} - may need alternative data source")
+                        return None
+                
                 response.raise_for_status()
 
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -243,7 +289,7 @@ class CricketPlayerScraper:
         except:
             return 0.0
 
-    def scrape_all_players(self, limit=None, delay=5):
+    def scrape_all_players(self, limit=None, delay=10):
         """Scrape data for all players in the CSV"""
         total_players = len(self.players_df) if limit is None else min(
             limit, len(self.players_df))
@@ -266,8 +312,11 @@ class CricketPlayerScraper:
             else:
                 print(f"✗ Failed to scrape {row['name']}")
 
-            # Be respectful to the server
-            time.sleep(delay)
+            # Be very respectful to the server with longer delays
+            if index < total_players - 1:  # Don't delay after the last player
+                wait_time = random.uniform(delay, delay * 2)
+                print(f"Waiting {wait_time:.1f}s before next request...")
+                time.sleep(wait_time)
 
     def save_data(self, filename='cricket_players_data.json'):
         """Save scraped data to JSON file"""
