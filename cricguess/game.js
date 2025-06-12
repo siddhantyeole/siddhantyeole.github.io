@@ -324,12 +324,92 @@ function nextObject() {
 
 function calculatePoints(guess, actualPrice) {
     const error = Math.abs(guess - actualPrice);
-    const maxError = Math.max(actualPrice, 400 - actualPrice);
+    
+    // Perfect guess gets 100 points
+    if (error === 0) return 100;
+    
+    // Exact 1 run off gets 99 points
+    if (error === 1) return 99;
+    
+    // Advanced scoring system with multiple tiers
+    let points;
+    
+    if (error <= 5) {
+        // Very close guesses: 95-98 points (exponential decay)
+        points = 100 - Math.pow(error - 1, 1.5) * 0.8;
+    } else if (error <= 15) {
+        // Close guesses: 80-94 points (quadratic decay)
+        points = 95 - Math.pow(error - 5, 1.8) * 0.12;
+    } else if (error <= 30) {
+        // Decent guesses: 60-79 points (linear with slight curve)
+        points = 80 - (error - 15) * 1.3;
+    } else if (error <= 50) {
+        // Fair guesses: 35-59 points (steeper decline)
+        points = 60 - (error - 30) * 1.25;
+    } else if (error <= 75) {
+        // Poor guesses: 15-34 points (moderate decline)
+        points = 35 - (error - 50) * 0.8;
+    } else if (error <= 100) {
+        // Bad guesses: 5-14 points (gentler decline)
+        points = 15 - (error - 75) * 0.4;
+    } else if (error <= 150) {
+        // Very bad guesses: 1-4 points (minimal points)
+        points = 5 - (error - 100) * 0.08;
+    } else {
+        // Terrible guesses: 0 points
+        points = 0;
+    }
+    
+    // Apply bonus multipliers for specific scenarios
+    let multiplier = 1;
+    
+    // Bonus for very low scores (harder to guess accurately)
+    if (actualPrice <= 30 && error <= 5) {
+        multiplier = 1.1; // 10% bonus
+    }
+    
+    // Bonus for very high scores (also harder to guess)
+    if (actualPrice >= 300 && error <= 10) {
+        multiplier = 1.05; // 5% bonus
+    }
+    
+    // Apply difficulty bonus based on the actual score range
+    const difficultyBonus = getDifficultyBonus(actualPrice, error);
+    multiplier *= difficultyBonus;
+    
+    points *= multiplier;
+    
+    // Ensure points are within 0-100 range and round to nearest integer
+    return Math.round(Math.max(0, Math.min(points, 100)));
+}
 
-    const normalizedError = error / maxError;
-    const score = 100 * (1 - normalizedError);
-
-    return Math.round(Math.max(0, Math.min(score, 100)));
+function getDifficultyBonus(actualPrice, error) {
+    // Different score ranges have different difficulty levels
+    let baseMultiplier = 1;
+    
+    if (actualPrice <= 25) {
+        // Very low scores are hardest to predict
+        baseMultiplier = 1.15;
+    } else if (actualPrice <= 50) {
+        // Low scores are harder
+        baseMultiplier = 1.08;
+    } else if (actualPrice >= 350) {
+        // Very high scores are also hard to predict
+        baseMultiplier = 1.12;
+    } else if (actualPrice >= 250) {
+        // High scores are moderately harder
+        baseMultiplier = 1.05;
+    } else {
+        // Middle range scores (50-250) are easiest
+        baseMultiplier = 1.0;
+    }
+    
+    // Additional precision bonus for extremely accurate guesses
+    if (error <= 2) {
+        baseMultiplier *= 1.02; // Extra 2% for being within 2 runs
+    }
+    
+    return baseMultiplier;
 }
 
 function animateCounter(targetValue, callback) {
