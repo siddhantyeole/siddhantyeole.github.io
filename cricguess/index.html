@@ -1,211 +1,521 @@
+
 <!DOCTYPE html>
 <html lang="en">
-   
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="shortcut icon" href="assets/images/cricbat.png" type="image/x-icon">
-    <title>Guess the runs scored</title>
+    <link rel="shortcut icon" href="assets/images/cricbat.png" type="image/x-icon">
+    <title>CricGuess - Guess the Runs!</title>
     <style>
         :root {
-            --bg-color: #f0f0f0;
-            --container-bg: white;
-            --text-color: #333;
-            --heading-color: #2c3e50;
-            --button-bg: #3498db;
-            --button-color: white;
-            --input-border: #3498db;
-            --result-color: #27ae60;
-            --score-color: #e74c3c;
+            --bg-color: #0f172a;
+            --container-bg: #1e293b;
+            --card-bg: #334155;
+            --text-color: #f1f5f9;
+            --heading-color: #ffffff;
+            --primary-color: #3b82f6;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+            --danger-color: #ef4444;
+            --border-color: #475569;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        .dark-theme {
-            --bg-color: #121212;
-            --container-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --heading-color: #ffffff;
-            --button-bg: #bb86fc;
-            --button-color: #000000;
-            --input-border: #bb86fc;
-            --result-color: #03dac6;
-            --score-color: #cf6679;
+        .light-theme {
+            --bg-color: #f8fafc;
+            --container-bg: #ffffff;
+            --card-bg: #f1f5f9;
+            --text-color: #334155;
+            --heading-color: #1e293b;
+            --border-color: #cbd5e1;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            background: var(--bg-color);
             color: var(--text-color);
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+            background-image: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%);
+        }
+
+        .header {
             text-align: center;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 2rem 1rem;
+            background: var(--gradient);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
         }
-        h1, h2 {
-            color: var(--heading-color);
-            margin-bottom: 30px;
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
         }
-        .container {
-            background-color: var(--container-bg);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            position: relative;
-            transition: background-color 0.3s ease;
+
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
         }
-               @media (min-width: 1024px) {
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .game-section {
+            background: var(--container-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .stats-panel {
+            background: var(--container-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .theme-toggle {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
         .image-container {
-            width: 80%;
-            max-width: 800px; /* Reduced from 640px */
-            margin: 0 auto 20px;
             position: relative;
-            padding-top: 60%; /* Adjusted from 45% for a 4:3 aspect ratio */
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            aspect-ratio: 16/9;
         }
-            #object-image {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                border-radius: 5px;
-            }
+
+        #object-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
         }
-        @media (max-width: 767px) {
-            .image-container {
-                width: 80%;
-                max-width: 360px; /* Reduced from 640px */
-                margin: 0 auto 20px;
-                position: relative;
-                padding-top: 60%; /* Adjusted from 45% for a 4:3 aspect ratio */
-                
-            }
-            #object-image {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 145%;
-                object-fit: contain;
-                border-radius: 5px;
-            }
+
+        #object-image:hover {
+            transform: scale(1.05);
         }
-        input, button {
-            font-size: 18px;
-            padding: 10px 15px;
-            margin: 10px 5px;
-            border: none;
-            border-radius: 5px;
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 10px;
         }
-        input {
+
+        .round-info {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .input-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .guess-input {
             width: 200px;
-            border: 2px solid var(--input-border);
-            background-color: var(--container-bg);
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--card-bg);
             color: var(--text-color);
+            text-align: center;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
         }
-        button {
-            background-color: var(--button-bg);
-            color: var(--button-color);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+
+        .guess-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
-        button:hover {
-            filter: brightness(90%);
-        }
-        #result {
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 18px;
-            color: var(--result-color);
-        }
-        .score-container {
-            margin-top: 30px;
-            font-size: 20px;
-        }
-        .score {
-            font-weight: bold;
-            color: var(--score-color);
-        }
-        #objects-count {
-            font-size: 16px;
-            color: var(--text-color);
-            opacity: 0.7;
-            margin-bottom: 10px;
-        }
-        #start-new-round {
-            background-color: var(--button-bg);
-            font-size: 20px;
-            padding: 15px 30px;
-            margin-top: 20px;
-        }
-        #total-score-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--text-color);
-        }
-        #theme-toggle {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: var(--button-bg);
-            color: var(--button-color);
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
             border: none;
-            padding: 10px;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
         }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .result {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .result.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .stats-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stats-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--heading-color);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .achievements {
+            margin-top: 1rem;
+        }
+
+        .achievement {
+            background: var(--gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            margin: 0.25rem;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .round-end {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .round-end h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--heading-color);
+        }
+
+        .final-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .final-stat {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .final-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .final-stat-label {
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
         #loading, #error {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 18px;
-            color: var(--text-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        #loading {
+            color: var(--primary-color);
         }
 
         #error {
-            color: var(--score-color);
+            color: var(--danger-color);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .final-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .guess-input {
+                width: 150px;
+                margin: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Runs Guessing Game</h1>
-    
-    <div id="game-container" class="container">
-        <button id="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
-        <div id="total-score-container">
-            Total Score: <span id="score" class="score">0</span>
-        </div>
-        <div class="image-container">
-            <img id="object-image" src="" alt="Object to guess">
-        </div>
-        <p id="objects-count"></p>
-        <input type="number" id="guess" placeholder="Enter your guess">
-        <button id="submit-guess" onclick="submitGuess()">Submit Guess</button>
-        <button id="next-object" onclick="nextObject()" style="display: none;">Next Player</button>
-        <p id="result"></p>
-        <div class="score-container">
-            Round Score: <span id="round-score" class="score">0</span>
-        </div>
+    <div class="header">
+        <h1>🏏 CricGuess</h1>
+        <p>Guess the runs scored in cricket innings and earn points!</p>
     </div>
 
-    <div id="round-end-container" class="container" style="display: none;">
-        <h2>Round Finished!</h2>
-        <p>Your score for this round: <span id="final-round-score" class="score"></span></p>
-        <p>Your total score: <span id="final-total-score" class="score"></span></p>
-        <button id="start-new-round" onclick="startNewRound()">Start Another Round</button>
+    <div class="main-container">
+        <div class="game-section">
+            <div id="game-container">
+                <div class="controls">
+                    <button class="theme-toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
+                    <div class="round-info" id="objects-count"></div>
+                </div>
+
+                <div class="image-container">
+                    <img id="object-image" src="" alt="Cricket player image">
+                    <div id="loading">Loading...</div>
+                    <div id="error" style="display: none;">Error loading image</div>
+                </div>
+
+                <div class="game-info">
+                    <div>
+                        <strong>Round Score:</strong> 
+                        <span id="round-score" class="stat-value">0</span>
+                    </div>
+                    <div>
+                        <strong>Accuracy:</strong> 
+                        <span id="accuracy" class="stat-value">0%</span>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <input type="number" id="guess" class="guess-input" placeholder="Enter runs" min="0" max="400">
+                    <button id="submit-guess" class="btn btn-primary" onclick="submitGuess()">Submit Guess</button>
+                    <button id="next-object" class="btn btn-secondary" onclick="nextObject()" style="display: none;">Next Player</button>
+                </div>
+
+                <div id="result" class="result"></div>
+            </div>
+
+            <div id="round-end-container" class="round-end" style="display: none;">
+                <h2>🎉 Round Complete!</h2>
+                <div class="final-stats">
+                    <div class="final-stat">
+                        <div id="final-round-score" class="final-stat-value">0</div>
+                        <div class="final-stat-label">Round Score</div>
+                    </div>
+                    <div class="final-stat">
+                        <div id="final-total-score" class="final-stat-value">0</div>
+                        <div class="final-stat-label">Total Score</div>
+                    </div>
+                </div>
+                <button id="start-new-round" class="btn btn-primary" onclick="startNewRound()">Start New Round</button>
+            </div>
+        </div>
+
+        <div class="stats-panel">
+            <div class="stats-card">
+                <div class="stats-title">📊 Game Stats</div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Score</span>
+                    <span id="total-score" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Games Played</span>
+                    <span id="games-played" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Best Round</span>
+                    <span id="best-round" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Avg Score</span>
+                    <span id="avg-score" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Perfect Guesses</span>
+                    <span id="perfect-guesses" class="stat-value">0</span>
+                </div>
+            </div>
+
+            <div class="stats-card">
+                <div class="stats-title">🏆 Achievements</div>
+                <div id="achievements" class="achievements">
+                    <!-- Achievements will be added dynamically -->
+                </div>
+            </div>
+
+            <div class="stats-card">
+                <div class="stats-title">📈 Current Session</div>
+                <div class="stat-item">
+                    <span class="stat-label">Current Streak</span>
+                    <span id="current-streak" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Best Streak</span>
+                    <span id="best-streak" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Last Score</span>
+                    <span id="last-score" class="stat-value">0</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="game.js"></script>
     <script>
         function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
+            document.body.classList.toggle('light-theme');
+            const isDark = !document.body.classList.contains('light-theme');
+            localStorage.setItem('darkTheme', isDark);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = isDark ? '🌙 Toggle Theme' : '☀️ Toggle Theme';
         }
+
+        // Load saved theme
+        window.addEventListener('load', () => {
+            const isDark = localStorage.getItem('darkTheme') !== 'false';
+            if (!isDark) {
+                document.body.classList.add('light-theme');
+                document.querySelector('.theme-toggle').textContent = '☀️ Toggle Theme';
+            }
+        });
+
+        // Add keyboard support
+        document.getElementById('guess').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitGuess();
+            }
+        });
     </script>
 </body>
 </html>
