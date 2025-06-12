@@ -13,4 +13,4 @@ echo -n "Enter runs scored: "
 read runs
 
 # Run the Python script with the inputs
-python add_player.py --image "$image_url" --runs "$runs"
+python3 add_player.py --image "$image_url" --runs "$runs"
