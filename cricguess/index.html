@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -127,12 +126,11 @@
             position: relative;
             width: 100%;
             max-width: 500px;
+            height: 400px;
             margin: 0 auto 2rem;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: var(--shadow);
-            min-height: 250px;
-            max-height: 400px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -504,7 +502,7 @@
             document.body.classList.toggle('light-theme');
             const isDark = !document.body.classList.contains('light-theme');
             localStorage.setItem('darkTheme', isDark);
-            
+
             const button = document.querySelector('.theme-toggle');
             button.textContent = isDark ? '🌙 Toggle Theme' : '☀️ Toggle Theme';
         }
@@ -527,3 +525,4 @@
     </script>
 </body>
 </html>
+```
