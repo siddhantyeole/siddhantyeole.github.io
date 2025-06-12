@@ -6,7 +6,7 @@ const objectsPerRound = 5;
 let availableObjects = [];
 
 
-cost objects = [
+const objects = [
   {
     "image": "https://imgpile.com/images/DPALlX.jpg",
     "price": 149
